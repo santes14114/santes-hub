@@ -1104,7 +1104,7 @@ end
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SantesHubGui"
 screenGui.ResetOnSpawn = false
-screenGui.Parent = PlayerGui  -- PlayerGui zaten WaitForChild ile alındı, artık nil değil
+screenGui.Parent = PlayerGui
 
 -- Ana panel
 local panel = Instance.new("Frame")
@@ -1402,7 +1402,7 @@ end
 
 selectTab(1)
 
--- Footer
+-- ==================== FOOTER (DÜZELTİLMİŞ) ====================
 local footer = Instance.new("Frame")
 footer.Name = "Footer"
 footer.Position = UDim2.new(0, 0, 1, -42)
@@ -1420,25 +1420,18 @@ avatar.Position = UDim2.new(0, 12, 0.5, -13)
 avatar.BackgroundColor3 = C.card
 avatar.BorderSizePixel = 0
 avatar.Parent = footer
-Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0) -- Yuvarlak
+Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
 
 -- Avatarı yükle
 safeCall(function()
     local userId = LocalPlayer.UserId
     local thumbType = Enum.ThumbnailType.HeadShot
     local thumbSize = Enum.ThumbnailSize.Size100x100
-    local content, isReady = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
-    if isReady then
-        avatar.Image = content
-    else
-        task.spawn(function()
-            local ok, img = pcall(function()
-                return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
-            end)
-            if ok then
-                avatar.Image = img
-            end
-        end)
+    local success, result = pcall(function()
+        return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+    end)
+    if success and result then
+        avatar.Image = result
     end
 end)
 
@@ -1466,39 +1459,7 @@ usernameLabel.TextSize = 10
 usernameLabel.TextXAlignment = Enum.TextXAlignment.Left
 usernameLabel.Parent = footer
 
--- Avatar
-local avatar = Instance.new("ImageLabel")
-avatar.Position = UDim2.new(0, 12, 0.5, -13)
-avatar.Size = UDim2.new(0, 26, 0, 26)
-avatar.BackgroundColor3 = C.accent
-avatar.BackgroundTransparency = 1
-avatar.BorderSizePixel = 0
-avatar.Parent = footer
-Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
-
-safeCall(function()
-    local thumbType = Enum.ThumbnailType.HeadShot
-    local thumbSize = Enum.ThumbnailSize.Size420x420
-    local success, result = safeCall(function()
-        return Players:GetUserThumbnailAsync(LocalPlayer.UserId, thumbType, thumbSize)
-    end)
-    if success and result and #result > 0 then
-        avatar.Image = result
-    end
-end)
-
-local footerLabel = Instance.new("TextLabel")
-footerLabel.BackgroundTransparency = 1
-footerLabel.Position = UDim2.new(0, 48, 0, 0)
-footerLabel.Size = UDim2.new(1, -60, 1, 0)
-footerLabel.Font = Enum.Font.Gotham
-footerLabel.Text = LocalPlayer.Name
-footerLabel.TextColor3 = C.text2
-footerLabel.TextSize = 12
-footerLabel.TextXAlignment = Enum.TextXAlignment.Left
-footerLabel.Parent = footer
-
--- Sürükleme
+-- ==================== SÜRÜKLEME VE MİNİMİZE ====================
 local dragging, dragInput, dragStart, startPos
 local wasDragged = false
 
