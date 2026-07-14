@@ -1412,6 +1412,60 @@ footer.BorderSizePixel = 0
 footer.Parent = panel
 Instance.new("UICorner", footer).CornerRadius = UDim.new(0, 10)
 
+-- Avatar (Roblox profil resmi)
+local avatar = Instance.new("ImageLabel")
+avatar.Name = "Avatar"
+avatar.Size = UDim2.new(0, 26, 0, 26)
+avatar.Position = UDim2.new(0, 12, 0.5, -13)
+avatar.BackgroundColor3 = C.card
+avatar.BorderSizePixel = 0
+avatar.Parent = footer
+Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0) -- Yuvarlak
+
+-- Avatarı yükle
+safeCall(function()
+    local userId = LocalPlayer.UserId
+    local thumbType = Enum.ThumbnailType.HeadShot
+    local thumbSize = Enum.ThumbnailSize.Size100x100
+    local content, isReady = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+    if isReady then
+        avatar.Image = content
+    else
+        task.spawn(function()
+            local ok, img = pcall(function()
+                return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+            end)
+            if ok then
+                avatar.Image = img
+            end
+        end)
+    end
+end)
+
+-- Display Adı (üst satır)
+local displayNameLabel = Instance.new("TextLabel")
+displayNameLabel.BackgroundTransparency = 1
+displayNameLabel.Position = UDim2.new(0, 48, 0, 2)
+displayNameLabel.Size = UDim2.new(1, -60, 0.5, 0)
+displayNameLabel.Font = Enum.Font.GothamBold
+displayNameLabel.Text = LocalPlayer.DisplayName
+displayNameLabel.TextColor3 = C.text2
+displayNameLabel.TextSize = 13
+displayNameLabel.TextXAlignment = Enum.TextXAlignment.Left
+displayNameLabel.Parent = footer
+
+-- Kullanıcı Adı (alt satır)
+local usernameLabel = Instance.new("TextLabel")
+usernameLabel.BackgroundTransparency = 1
+usernameLabel.Position = UDim2.new(0, 48, 0, 20)
+usernameLabel.Size = UDim2.new(1, -60, 0.5, 0)
+usernameLabel.Font = Enum.Font.Gotham
+usernameLabel.Text = "@" .. LocalPlayer.Name
+usernameLabel.TextColor3 = C.text3
+usernameLabel.TextSize = 10
+usernameLabel.TextXAlignment = Enum.TextXAlignment.Left
+usernameLabel.Parent = footer
+
 -- Avatar
 local avatar = Instance.new("ImageLabel")
 avatar.Position = UDim2.new(0, 12, 0.5, -13)
