@@ -1,132 +1,11 @@
 --[[
-    SANTES HUB v3.2 - Premium Edition (EQR Hub Modülleri Entegreli - ÇALIŞIR VERSİYON)
+    SANTES HUB v3.2 - Premium Edition
     Geliştirici: Roblox Lua Uzmanı
-    Versiyon: 3.2.7
+    Versiyon: 3.2.8
     Tarih: 2026
     
-    NOT: Tüm exploit fonksiyonları için hata yakalama eklendi.
+    SADECE GUI - Loader YOK
 ]]
-
--- ==================== LOADER ====================
-local function ShowLoader()
-    local Players = game:GetService("Players")
-    local TweenService = game:GetService("TweenService")
-    
-    local LocalPlayer = Players.LocalPlayer
-    local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-    
-    local old = PlayerGui:FindFirstChild("SantesHub_Loader")
-    if old then old:Destroy() end
-    
-    local loaderGui = Instance.new("ScreenGui")
-    loaderGui.Name = "SantesHub_Loader"
-    loaderGui.ResetOnSpawn = false
-    loaderGui.IgnoreGuiInset = true
-    loaderGui.DisplayOrder = 999
-    loaderGui.Parent = PlayerGui
-    
-    local bg = Instance.new("Frame")
-    bg.Size = UDim2.new(1, 0, 1, 0)
-    bg.BackgroundColor3 = Color3.fromRGB(6, 6, 6)
-    bg.BorderSizePixel = 0
-    bg.Parent = loaderGui
-    
-    local container = Instance.new("Frame")
-    container.Size = UDim2.new(1, 0, 0, 140)
-    container.Position = UDim2.new(0.5, 0, 0.5, 0)
-    container.AnchorPoint = Vector2.new(0.5, 0.5)
-    container.BackgroundTransparency = 1
-    container.Parent = bg
-    
-    local layout = Instance.new("UIListLayout")
-    layout.FillDirection = Enum.FillDirection.Vertical
-    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    layout.VerticalAlignment = Enum.VerticalAlignment.Center
-    layout.SortOrder = Enum.SortOrder.LayoutOrder
-    layout.Padding = UDim.new(0, 4)
-    layout.Parent = container
-    
-    local lineTop = Instance.new("TextLabel")
-    lineTop.Name = "LineTop"
-    lineTop.Size = UDim2.new(1, 0, 0, 60)
-    lineTop.BackgroundTransparency = 1
-    lineTop.Text = ""
-    lineTop.Font = Enum.Font.GothamBold
-    lineTop.TextSize = 46
-    lineTop.TextColor3 = Color3.fromRGB(242, 242, 242)
-    lineTop.TextTransparency = 1
-    lineTop.LayoutOrder = 1
-    lineTop.Parent = container
-    
-    local lineBottom = Instance.new("TextLabel")
-    lineBottom.Name = "LineBottom"
-    lineBottom.Size = UDim2.new(1, 0, 0, 60)
-    lineBottom.BackgroundTransparency = 1
-    lineBottom.Text = ""
-    lineBottom.Font = Enum.Font.GothamBold
-    lineBottom.TextSize = 46
-    lineBottom.TextColor3 = Color3.fromRGB(247, 247, 247)
-    lineBottom.TextTransparency = 1
-    lineBottom.LayoutOrder = 2
-    lineBottom.Parent = container
-    
-    local function fadeIn(label, text, color, duration)
-        duration = duration or 0.35
-        label.Text = text
-        label.TextColor3 = color
-        label.TextTransparency = 1
-        label.TextSize = 40
-        local tween = TweenService:Create(label, TweenInfo.new(duration, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-            TextTransparency = 0,
-            TextSize = 46,
-        })
-        tween:Play()
-        return tween
-    end
-    
-    local function fadeOut(label, duration)
-        duration = duration or 0.3
-        local tween = TweenService:Create(label, TweenInfo.new(duration, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
-            TextTransparency = 1,
-            TextSize = 40,
-        })
-        tween:Play()
-        return tween
-    end
-    
-    local function dimColor(label, color, duration)
-        duration = duration or 0.3
-        local tween = TweenService:Create(label, TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
-            TextColor3 = color,
-        })
-        tween:Play()
-        return tween
-    end
-    
-    task.spawn(function()
-        fadeIn(lineTop, "WELCOME", Color3.fromRGB(242, 242, 242))
-        task.wait(1)
-        dimColor(lineTop, Color3.fromRGB(90, 90, 90), 0.4)
-        fadeIn(lineBottom, "TO", Color3.fromRGB(242, 242, 242))
-        task.wait(1)
-        fadeOut(lineTop, 0.3)
-        fadeOut(lineBottom, 0.3)
-        task.wait(0.35)
-        fadeIn(lineTop, "SANTES", Color3.fromRGB(229, 57, 53))
-        fadeIn(lineBottom, "HUB", Color3.fromRGB(247, 247, 247))
-        task.wait(1)
-        local bgFade = TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {BackgroundTransparency = 1})
-        local topFade = TweenService:Create(lineTop, TweenInfo.new(0.4), {TextTransparency = 1})
-        local bottomFade = TweenService:Create(lineBottom, TweenInfo.new(0.4), {TextTransparency = 1})
-        topFade:Play()
-        bottomFade:Play()
-        task.wait(0.1)
-        bgFade:Play()
-        bgFade.Completed:Wait()
-        loaderGui:Destroy()
-        CreateMainGUI()
-    end)
-end
 
 -- ==================== SERVİSLER ====================
 local Players = game:GetService("Players")
@@ -139,8 +18,6 @@ local CoreGui = game:GetService("CoreGui")
 local StarterGui = game:GetService("StarterGui")
 local VirtualUser = game:GetService("VirtualUser")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TextChatService = game:GetService("TextChatService")
-local HttpService = game:GetService("HttpService")
 
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui", 10)
@@ -152,6 +29,7 @@ local function safeCall(func, ...)
     return success, result
 end
 
+-- Eski GUI'leri temizle
 for _, name in pairs({"SantesHubScreenGui", "SantesHub_Main", "SantesHub_Loader", "SantesHub", "SantesHubGui"}) do
     safeCall(function()
         local gui = PlayerGui:FindFirstChild(name)
@@ -1263,465 +1141,447 @@ function ESP_Toggle()
     return espEnabled
 end
 
--- ==================== ANA GUI (SantesHub Premium) ====================
+-- ==================== ANA GUI ====================
 
-function CreateMainGUI()
-    -- Eski GUI'yi temizle
-    for _, name in pairs({"SantesHubScreenGui", "SantesHub_Main", "SantesHub", "SantesHubGui"}) do
-        safeCall(function()
-            local gui = PlayerGui:FindFirstChild(name)
-            if gui then gui:Destroy() end
-        end)
-        safeCall(function()
-            local gui = CoreGui:FindFirstChild(name)
-            if gui then gui:Destroy() end
-        end)
-    end
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SantesHubGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = PlayerGui
 
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "SantesHubGui"
-    screenGui.ResetOnSpawn = false
-    screenGui.Parent = PlayerGui
+-- Ana panel
+local panel = Instance.new("Frame")
+panel.Name = "Panel"
+panel.Size = UDim2.new(0, 480, 0, 380)
+panel.Position = UDim2.new(0.5, -240, 0.5, -190)
+panel.BackgroundColor3 = C.bg
+panel.BorderSizePixel = 0
+panel.Parent = screenGui
+Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 10)
+local ps = Instance.new("UIStroke", panel)
+ps.Color = C.border
+ps.Thickness = 1.5
 
-    -- Ana panel
-    local panel = Instance.new("Frame")
-    panel.Name = "Panel"
-    panel.Size = UDim2.new(0, 480, 0, 380)
-    panel.Position = UDim2.new(0.5, -240, 0.5, -190)
-    panel.BackgroundColor3 = C.bg
-    panel.BorderSizePixel = 0
-    panel.Parent = screenGui
-    Instance.new("UICorner", panel).CornerRadius = UDim.new(0, 10)
-    local ps = Instance.new("UIStroke", panel)
-    ps.Color = C.border
-    ps.Thickness = 1.5
+-- Glow efekti
+local glow = Instance.new("ImageLabel")
+glow.Name = "Glow"
+glow.BackgroundTransparency = 1
+glow.Image = "rbxassetid://5028857084"
+glow.ImageColor3 = Color3.fromRGB(255, 0, 0)
+glow.ImageTransparency = 0.55
+glow.Size = UDim2.new(1, 60, 1, 60)
+glow.Position = UDim2.new(0, -30, 0, -30)
+glow.ZIndex = 0
+glow.Parent = panel
 
-    -- Glow efekti
-    local glow = Instance.new("ImageLabel")
-    glow.Name = "Glow"
-    glow.BackgroundTransparency = 1
-    glow.Image = "rbxassetid://5028857084"
-    glow.ImageColor3 = Color3.fromRGB(255, 0, 0)
-    glow.ImageTransparency = 0.55
-    glow.Size = UDim2.new(1, 60, 1, 60)
-    glow.Position = UDim2.new(0, -30, 0, -30)
-    glow.ZIndex = 0
-    glow.Parent = panel
+-- Başlık çubuğu
+local titleBar = Instance.new("Frame")
+titleBar.Name = "TitleBar"
+titleBar.Size = UDim2.new(1, 0, 0, 34)
+titleBar.BackgroundColor3 = C.panel
+titleBar.BorderSizePixel = 0
+titleBar.Parent = panel
+Instance.new("UICorner", titleBar).CornerRadius = UDim.new(0, 10)
 
-    -- Başlık çubuğu
-    local titleBar = Instance.new("Frame")
-    titleBar.Name = "TitleBar"
-    titleBar.Size = UDim2.new(1, 0, 0, 34)
-    titleBar.BackgroundColor3 = C.panel
-    titleBar.BorderSizePixel = 0
-    titleBar.Parent = panel
-    Instance.new("UICorner", titleBar).CornerRadius = UDim.new(0, 10)
+local titleLabel = Instance.new("TextLabel")
+titleLabel.BackgroundTransparency = 1
+titleLabel.Position = UDim2.new(0, 14, 0, 0)
+titleLabel.Size = UDim2.new(1, -80, 1, 0)
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Text = "SANTES HUB"
+titleLabel.TextColor3 = C.accent
+titleLabel.TextSize = 15
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = titleBar
 
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Position = UDim2.new(0, 14, 0, 0)
-    titleLabel.Size = UDim2.new(1, -80, 1, 0)
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.Text = "SANTES HUB"
-    titleLabel.TextColor3 = C.accent
-    titleLabel.TextSize = 15
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    titleLabel.Parent = titleBar
+local versionLabel = Instance.new("TextLabel")
+versionLabel.BackgroundTransparency = 1
+versionLabel.Position = UDim2.new(0, 110, 0, 0)
+versionLabel.Size = UDim2.new(0, 60, 1, 0)
+versionLabel.Font = Enum.Font.Gotham
+versionLabel.Text = "v3.0"
+versionLabel.TextColor3 = C.text3
+versionLabel.TextSize = 10
+versionLabel.TextXAlignment = Enum.TextXAlignment.Left
+versionLabel.Parent = titleBar
 
-    local versionLabel = Instance.new("TextLabel")
-    versionLabel.BackgroundTransparency = 1
-    versionLabel.Position = UDim2.new(0, 110, 0, 0)
-    versionLabel.Size = UDim2.new(0, 60, 1, 0)
-    versionLabel.Font = Enum.Font.Gotham
-    versionLabel.Text = "v3.0"
-    versionLabel.TextColor3 = C.text3
-    versionLabel.TextSize = 10
-    versionLabel.TextXAlignment = Enum.TextXAlignment.Left
-    versionLabel.Parent = titleBar
+local minimizeButton = Instance.new("TextButton")
+minimizeButton.Name = "MinimizeButton"
+minimizeButton.BackgroundTransparency = 1
+minimizeButton.Position = UDim2.new(1, -64, 0, 0)
+minimizeButton.Size = UDim2.new(0, 30, 1, 0)
+minimizeButton.Font = Enum.Font.GothamBold
+minimizeButton.Text = "—"
+minimizeButton.TextColor3 = C.text3
+minimizeButton.TextSize = 16
+minimizeButton.Parent = titleBar
 
-    local minimizeButton = Instance.new("TextButton")
-    minimizeButton.Name = "MinimizeButton"
-    minimizeButton.BackgroundTransparency = 1
-    minimizeButton.Position = UDim2.new(1, -64, 0, 0)
-    minimizeButton.Size = UDim2.new(0, 30, 1, 0)
-    minimizeButton.Font = Enum.Font.GothamBold
-    minimizeButton.Text = "—"
-    minimizeButton.TextColor3 = C.text3
-    minimizeButton.TextSize = 16
-    minimizeButton.Parent = titleBar
+local closeButton = Instance.new("TextButton")
+closeButton.BackgroundTransparency = 1
+closeButton.Position = UDim2.new(1, -34, 0, 0)
+closeButton.Size = UDim2.new(0, 34, 1, 0)
+closeButton.Font = Enum.Font.GothamBold
+closeButton.Text = "×"
+closeButton.TextColor3 = C.text3
+closeButton.TextSize = 18
+closeButton.Parent = titleBar
 
-    local closeButton = Instance.new("TextButton")
-    closeButton.BackgroundTransparency = 1
-    closeButton.Position = UDim2.new(1, -34, 0, 0)
-    closeButton.Size = UDim2.new(0, 34, 1, 0)
-    closeButton.Font = Enum.Font.GothamBold
-    closeButton.Text = "×"
-    closeButton.TextColor3 = C.text3
-    closeButton.TextSize = 18
-    closeButton.Parent = titleBar
-
-    closeButton.MouseButton1Click:Connect(function()
-        safeCall(function()
-            if Fly_Enabled then Fly_Disable() end
-            if Noclip_Enabled then Noclip_Disable() end
-            if FullBright_Enabled then FullBright_Disable() end
-            if espEnabled then ESP_Disable() end
-            if Shadow_Active then Shadow_Deactivate() end
-            if NoRecoil_Enabled then NoRecoil_Disable() end
-            if Autofarm_Enabled then Autofarm_Disable() end
-            if AutoPickupMoney_Enabled then AutoPickupMoney_Disable() end
-            if AdminCheck_Enabled then AdminCheck_Disable() end
-            if Ragebot_Enabled then Ragebot_Disable() end
-            if MeleeAura_Enabled then MeleeAura_Disable() end
-            if Aimbot_Enabled then Aimbot_Disable() end
-        end)
-        screenGui:Destroy()
-    end)
-
-    -- Body
-    local body = Instance.new("Frame")
-    body.Name = "Body"
-    body.Position = UDim2.new(0, 0, 0, 34)
-    body.Size = UDim2.new(1, 0, 1, -34 - 42)
-    body.BackgroundTransparency = 1
-    body.Parent = panel
-
-    -- Sidebar
-    local sidebar = Instance.new("Frame")
-    sidebar.Name = "Sidebar"
-    sidebar.Size = UDim2.new(0, 130, 1, 0)
-    sidebar.BackgroundColor3 = C.panel
-    sidebar.BorderSizePixel = 0
-    sidebar.Parent = body
-
-    local sidebarList = Instance.new("UIListLayout")
-    sidebarList.Padding = UDim.new(0, 2)
-    sidebarList.Parent = sidebar
-
-    local tabNames = {"Genel", "Görünüm", "Savaş", "Farming", "Sistem"}
-    local tabs = {}
-    local currentTab = 1
-
-    for i, name in ipairs(tabNames) do
-        local tab = Instance.new("TextButton")
-        tab.Name = "Tab_" .. name
-        tab.Size = UDim2.new(1, 0, 0, 36)
-        tab.BackgroundTransparency = 1
-        tab.Font = Enum.Font.Gotham
-        tab.Text = "   " .. name
-        tab.TextXAlignment = Enum.TextXAlignment.Left
-        tab.TextColor3 = C.text3
-        tab.TextSize = 13
-        tab.Parent = sidebar
-
-        local indicator = Instance.new("Frame")
-        indicator.Name = "Indicator"
-        indicator.Size = UDim2.new(0, 3, 1, 0)
-        indicator.BackgroundColor3 = C.accent
-        indicator.BackgroundTransparency = 1
-        indicator.BorderSizePixel = 0
-        indicator.Parent = tab
-
-        tabs[i] = {button = tab, indicator = indicator}
-    end
-
-    -- Content
-    local content = Instance.new("ScrollingFrame")
-    content.Name = "Content"
-    content.Position = UDim2.new(0, 130, 0, 0)
-    content.Size = UDim2.new(1, -130, 1, 0)
-    content.BackgroundTransparency = 1
-    content.BorderSizePixel = 0
-    content.ScrollBarThickness = 3
-    content.ScrollBarImageColor3 = C.accent
-    content.CanvasSize = UDim2.new(0, 0, 0, 0)
-    content.Parent = body
-
-    local contentList = Instance.new("UIListLayout")
-    contentList.Padding = UDim.new(0, 8)
-    contentList.SortOrder = Enum.SortOrder.LayoutOrder
-    contentList.Parent = content
-
-    local contentPadding = Instance.new("UIPadding")
-    contentPadding.PaddingTop = UDim.new(0, 12)
-    contentPadding.PaddingLeft = UDim.new(0, 12)
-    contentPadding.PaddingRight = UDim.new(0, 12)
-    contentPadding.PaddingBottom = UDim.new(0, 12)
-    contentPadding.Parent = content
-
-    contentList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-        content.CanvasSize = UDim2.new(0, 0, 0, contentList.AbsoluteContentSize.Y + 20)
-    end)
-
-    -- Toggle Row Oluşturucu
-    local function createToggleRow(labelText, defaultOn, onEnable, onDisable, getState)
-        local row = Instance.new("Frame")
-        row.Size = UDim2.new(1, 0, 0, 40)
-        row.BackgroundColor3 = C.card
-        row.BorderSizePixel = 0
-        row.Parent = content
-        Instance.new("UICorner", row).CornerRadius = UDim.new(0, 6)
-        local rs = Instance.new("UIStroke", row)
-        rs.Color = C.border
-        rs.Thickness = 1
-
-        local label = Instance.new("TextLabel")
-        label.BackgroundTransparency = 1
-        label.Position = UDim2.new(0, 14, 0, 0)
-        label.Size = UDim2.new(1, -80, 1, 0)
-        label.Font = Enum.Font.Gotham
-        label.Text = labelText
-        label.TextColor3 = C.text2
-        label.TextSize = 13
-        label.TextXAlignment = Enum.TextXAlignment.Left
-        label.Parent = row
-
-        local toggleBg = Instance.new("TextButton")
-        toggleBg.Name = "Toggle"
-        toggleBg.Position = UDim2.new(1, -54, 0.5, -10)
-        toggleBg.Size = UDim2.new(0, 40, 0, 20)
-        toggleBg.Text = ""
-        toggleBg.AutoButtonColor = false
-        toggleBg.BackgroundColor3 = defaultOn and C.on or C.off
-        toggleBg.Parent = row
-        Instance.new("UICorner", toggleBg).CornerRadius = UDim.new(1, 0)
-
-        local knob = Instance.new("Frame")
-        knob.Size = UDim2.new(0, 16, 0, 16)
-        knob.Position = defaultOn and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
-        knob.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-        knob.BorderSizePixel = 0
-        knob.Parent = toggleBg
-        Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
-
-        local isOn = defaultOn
-        local function updateState()
-            if getState then
-                local s, r = safeCall(getState)
-                if s then isOn = r end
-            end
-            local targetPos = isOn and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
-            local targetColor = isOn and C.on or C.off
-            knob.Position = targetPos
-            toggleBg.BackgroundColor3 = targetColor
-        end
-
-        toggleBg.MouseButton1Click:Connect(function()
-            if isOn then
-                if onDisable then safeCall(onDisable) end
-            else
-                if onEnable then safeCall(onEnable) end
-            end
-            isOn = not isOn
-            updateState()
-        end)
-
-        updateState()
-        return row
-    end
-
-    -- Sekme Geçişi
-    local function selectTab(index)
-        currentTab = index
-        for i, t in ipairs(tabs) do
-            if i == index then
-                t.button.TextColor3 = C.accent
-                t.indicator.BackgroundTransparency = 0
-            else
-                t.button.TextColor3 = C.text3
-                t.indicator.BackgroundTransparency = 1
-            end
-        end
-
-        for _, child in pairs(content:GetChildren()) do
-            if child:IsA("Frame") then child:Destroy() end
-        end
-
-        local tabName = tabNames[index]
-        if tabName == "Genel" then
-            createToggleRow("Fly (Uçma)", false, Fly_Enable, Fly_Disable, function() return Fly_Enabled end)
-            createToggleRow("Noclip", false, Noclip_Enable, Noclip_Disable, function() return Noclip_Enabled end)
-            createToggleRow("Sınırsız Zıplama", false, function() end, function() end, function() return false end)
-            createToggleRow("Sınırsız Enerji", false, InfiniteStamina_Enable, InfiniteStamina_Disable, function() return isInfiniteStaminaEnabled end)
-
-        elseif tabName == "Görünüm" then
-            createToggleRow("FullBright", false, FullBright_Enable, FullBright_Disable, function() return FullBright_Enabled end)
-            createToggleRow("FOV Değiştir", false, FOV_Enable, FOV_Disable, function() return Fov_Enabled end)
-            createToggleRow("ESP (Oyuncu)", false, ESP_Enable, ESP_Disable, function() return espEnabled end)
-            createToggleRow("Safe ESP", false, SafeESP_Enable, SafeESP_Disable, function() return BredMakurz_Enabled end)
-            createToggleRow("Görünmezlik", false, Invis_Enable, Invis_Disable, function() return Shadow_Active end)
-
-        elseif tabName == "Savaş" then
-            createToggleRow("Melee Aura", false, MeleeAura_Enable, MeleeAura_Disable, function() return MeleeAura_Enabled end)
-            createToggleRow("Aimbot", false, Aimbot_Enable, Aimbot_Disable, function() return AimBotSettings.Enabled end)
-            createToggleRow("No Recoil", false, NoRecoil_Enable, NoRecoil_Disable, function() return NoRecoil_Enabled end)
-            createToggleRow("Ragebot", false, Ragebot_Enable, Ragebot_Disable, function() return Ragebot_Enabled end)
-
-        elseif tabName == "Farming" then
-            createToggleRow("Autofarm", false, Autofarm_Enable, Autofarm_Disable, function() return autofarmEnabled end)
-            createToggleRow("Auto Pickup Money", false, AutoPickupMoney_Enable, AutoPickupMoney_Disable, function() return AutoPickupMoney_Enabled end)
-            createToggleRow("No Fail Lockpick", false, NoFailLockpick_Enable, NoFailLockpick_Disable, function() return NoFailLockpick_Enabled end)
-            createToggleRow("Kapı Aç", false, OpenNearbyDoors_Enable, OpenNearbyDoors_Disable, function() return OpenNearbyDoors_Enabled end)
-            createToggleRow("Kapı Kilit Aç", false, UnlockNearbyDoors_Enable, UnlockNearbyDoors_Disable, function() return UnlockNearbyDoors_Enabled end)
-
-        elseif tabName == "Sistem" then
-            createToggleRow("Staff Detector", false, AdminCheck_Enable, AdminCheck_Disable, function() return AdminCheck_Enabled end)
-        end
-
-        content.CanvasPosition = Vector2.new(0, 0)
-        contentList:GetPropertyChangedSignal("AbsoluteContentSize"):Fire()
-    end
-
-    for i, t in ipairs(tabs) do
-        t.button.MouseButton1Click:Connect(function()
-            selectTab(i)
-        end)
-    end
-
-    selectTab(1)
-
-    -- Footer
-    local footer = Instance.new("Frame")
-    footer.Name = "Footer"
-    footer.Position = UDim2.new(0, 0, 1, -42)
-    footer.Size = UDim2.new(1, 0, 0, 42)
-    footer.BackgroundColor3 = C.panel
-    footer.BorderSizePixel = 0
-    footer.Parent = panel
-    Instance.new("UICorner", footer).CornerRadius = UDim.new(0, 10)
-
-    -- Avatar (Kullanıcının kafası)
-    local avatar = Instance.new("ImageLabel")
-    avatar.Position = UDim2.new(0, 12, 0.5, -13)
-    avatar.Size = UDim2.new(0, 26, 0, 26)
-    avatar.BackgroundColor3 = C.accent
-    avatar.BackgroundTransparency = 1
-    avatar.BorderSizePixel = 0
-    avatar.Parent = footer
-    Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
-
-    -- Avatar resmini yükle
+closeButton.MouseButton1Click:Connect(function()
     safeCall(function()
-        local thumbType = Enum.ThumbnailType.HeadShot
-        local thumbSize = Enum.ThumbnailSize.Size420x420
-        local success, result = safeCall(function()
-            return Players:GetUserThumbnailAsync(LocalPlayer.UserId, thumbType, thumbSize)
-        end)
-        if success and result and #result > 0 then
-            avatar.Image = result
-        end
+        if Fly_Enabled then Fly_Disable() end
+        if Noclip_Enabled then Noclip_Disable() end
+        if FullBright_Enabled then FullBright_Disable() end
+        if espEnabled then ESP_Disable() end
+        if Shadow_Active then Shadow_Deactivate() end
+        if NoRecoil_Enabled then NoRecoil_Disable() end
+        if autofarmEnabled then Autofarm_Disable() end
+        if AutoPickupMoney_Enabled then AutoPickupMoney_Disable() end
+        if AdminCheck_Enabled then AdminCheck_Disable() end
+        if Ragebot_Enabled then Ragebot_Disable() end
+        if MeleeAura_Enabled then MeleeAura_Disable() end
+        if AimBotSettings.Enabled then Aimbot_Disable() end
     end)
+    screenGui:Destroy()
+end)
 
-    local footerLabel = Instance.new("TextLabel")
-    footerLabel.BackgroundTransparency = 1
-    footerLabel.Position = UDim2.new(0, 48, 0, 0)
-    footerLabel.Size = UDim2.new(1, -60, 1, 0)
-    footerLabel.Font = Enum.Font.Gotham
-    footerLabel.Text = LocalPlayer.Name
-    footerLabel.TextColor3 = C.text2
-    footerLabel.TextSize = 12
-    footerLabel.TextXAlignment = Enum.TextXAlignment.Left
-    footerLabel.Parent = footer
+-- Body
+local body = Instance.new("Frame")
+body.Name = "Body"
+body.Position = UDim2.new(0, 0, 0, 34)
+body.Size = UDim2.new(1, 0, 1, -34 - 42)
+body.BackgroundTransparency = 1
+body.Parent = panel
 
-    -- Sürükleme
-    local dragging, dragInput, dragStart, startPos
-    local wasDragged = false
+-- Sidebar
+local sidebar = Instance.new("Frame")
+sidebar.Name = "Sidebar"
+sidebar.Size = UDim2.new(0, 130, 1, 0)
+sidebar.BackgroundColor3 = C.panel
+sidebar.BorderSizePixel = 0
+sidebar.Parent = body
 
-    titleBar.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            wasDragged = false
-            dragStart = input.Position
-            startPos = panel.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
+local sidebarList = Instance.new("UIListLayout")
+sidebarList.Padding = UDim.new(0, 2)
+sidebarList.Parent = sidebar
 
-    titleBar.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
+local tabNames = {"Genel", "Görünüm", "Savaş", "Farming", "Sistem"}
+local tabs = {}
+local currentTab = 1
 
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            if delta.Magnitude > 3 then wasDragged = true end
-            panel.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
+for i, name in ipairs(tabNames) do
+    local tab = Instance.new("TextButton")
+    tab.Name = "Tab_" .. name
+    tab.Size = UDim2.new(1, 0, 0, 36)
+    tab.BackgroundTransparency = 1
+    tab.Font = Enum.Font.Gotham
+    tab.Text = "   " .. name
+    tab.TextXAlignment = Enum.TextXAlignment.Left
+    tab.TextColor3 = C.text3
+    tab.TextSize = 13
+    tab.Parent = sidebar
 
-    -- Minimize
-    local isMinimized = false
-    local fullSize = UDim2.new(0, 480, 0, 380)
-    local minimizedSize = UDim2.new(0, 90, 0, 90)
+    local indicator = Instance.new("Frame")
+    indicator.Name = "Indicator"
+    indicator.Size = UDim2.new(0, 3, 1, 0)
+    indicator.BackgroundColor3 = C.accent
+    indicator.BackgroundTransparency = 1
+    indicator.BorderSizePixel = 0
+    indicator.Parent = tab
 
-    local function minimizePanel()
-        isMinimized = true
-        body.Visible = false
-        footer.Visible = false
-        minimizeButton.Visible = false
-        closeButton.Visible = false
-        titleLabel.Text = "SANTES\nHUB"
-        titleLabel.TextSize = 13
-        titleLabel.TextWrapped = true
-        titleLabel.TextXAlignment = Enum.TextXAlignment.Center
-        titleLabel.TextYAlignment = Enum.TextYAlignment.Center
-        titleLabel.Position = UDim2.new(0, 0, 0, 0)
-        titleLabel.Size = UDim2.new(1, 0, 1, 0)
-        titleBar.Size = UDim2.new(1, 0, 1, 0)
-        TweenService:Create(panel, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {Size = minimizedSize}):Play()
-    end
-
-    local function restorePanel()
-        isMinimized = false
-        TweenService:Create(panel, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {Size = fullSize}):Play()
-        task.wait(0.18)
-        titleBar.Size = UDim2.new(1, 0, 0, 34)
-        titleLabel.Text = "SANTES HUB"
-        titleLabel.TextSize = 15
-        titleLabel.TextWrapped = false
-        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-        titleLabel.TextYAlignment = Enum.TextYAlignment.Center
-        titleLabel.Position = UDim2.new(0, 14, 0, 0)
-        titleLabel.Size = UDim2.new(1, -80, 1, 0)
-        body.Visible = true
-        footer.Visible = true
-        minimizeButton.Visible = true
-        closeButton.Visible = true
-    end
-
-    minimizeButton.MouseButton1Click:Connect(function()
-        minimizePanel()
-    end)
-
-    titleBar.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 and isMinimized and not wasDragged then
-            restorePanel()
-        end
-        wasDragged = false
-    end)
-
-    -- Right Shift ile aç/kapa
-    UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if not gameProcessed and input.KeyCode == Enum.KeyCode.RightShift then
-            if isMinimized then restorePanel()
-            else minimizePanel() end
-        end
-    end)
-
-    print("╔═══════════════════════════════════════╗")
-    print("║     SANTES HUB v3.2 YÜKLENDİ!       ║")
-    print("║                                     ║")
-    print("║  ➤ Right Shift ile Menüyü Aç/Kapat  ║")
-    print("║  ➤ ESC ile Menüyü Kapat            ║")
-    print("║                                     ║")
-    print("║  ⚠ SADECE EĞİTİM AMAÇLIDIR! ⚠     ║")
-    print("╚═══════════════════════════════════════╝")
+    tabs[i] = {button = tab, indicator = indicator}
 end
 
-ShowLoader()
+-- Content
+local content = Instance.new("ScrollingFrame")
+content.Name = "Content"
+content.Position = UDim2.new(0, 130, 0, 0)
+content.Size = UDim2.new(1, -130, 1, 0)
+content.BackgroundTransparency = 1
+content.BorderSizePixel = 0
+content.ScrollBarThickness = 3
+content.ScrollBarImageColor3 = C.accent
+content.CanvasSize = UDim2.new(0, 0, 0, 0)
+content.Parent = body
+
+local contentList = Instance.new("UIListLayout")
+contentList.Padding = UDim.new(0, 8)
+contentList.SortOrder = Enum.SortOrder.LayoutOrder
+contentList.Parent = content
+
+local contentPadding = Instance.new("UIPadding")
+contentPadding.PaddingTop = UDim.new(0, 12)
+contentPadding.PaddingLeft = UDim.new(0, 12)
+contentPadding.PaddingRight = UDim.new(0, 12)
+contentPadding.PaddingBottom = UDim.new(0, 12)
+contentPadding.Parent = content
+
+contentList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    content.CanvasSize = UDim2.new(0, 0, 0, contentList.AbsoluteContentSize.Y + 20)
+end)
+
+-- Toggle Row Oluşturucu
+local function createToggleRow(labelText, defaultOn, onEnable, onDisable, getState)
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(1, 0, 0, 40)
+    row.BackgroundColor3 = C.card
+    row.BorderSizePixel = 0
+    row.Parent = content
+    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 6)
+    local rs = Instance.new("UIStroke", row)
+    rs.Color = C.border
+    rs.Thickness = 1
+
+    local label = Instance.new("TextLabel")
+    label.BackgroundTransparency = 1
+    label.Position = UDim2.new(0, 14, 0, 0)
+    label.Size = UDim2.new(1, -80, 1, 0)
+    label.Font = Enum.Font.Gotham
+    label.Text = labelText
+    label.TextColor3 = C.text2
+    label.TextSize = 13
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = row
+
+    local toggleBg = Instance.new("TextButton")
+    toggleBg.Name = "Toggle"
+    toggleBg.Position = UDim2.new(1, -54, 0.5, -10)
+    toggleBg.Size = UDim2.new(0, 40, 0, 20)
+    toggleBg.Text = ""
+    toggleBg.AutoButtonColor = false
+    toggleBg.BackgroundColor3 = defaultOn and C.on or C.off
+    toggleBg.Parent = row
+    Instance.new("UICorner", toggleBg).CornerRadius = UDim.new(1, 0)
+
+    local knob = Instance.new("Frame")
+    knob.Size = UDim2.new(0, 16, 0, 16)
+    knob.Position = defaultOn and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+    knob.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+    knob.BorderSizePixel = 0
+    knob.Parent = toggleBg
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(1, 0)
+
+    local isOn = defaultOn
+    local function updateState()
+        if getState then
+            local s, r = safeCall(getState)
+            if s then isOn = r end
+        end
+        local targetPos = isOn and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+        local targetColor = isOn and C.on or C.off
+        knob.Position = targetPos
+        toggleBg.BackgroundColor3 = targetColor
+    end
+
+    toggleBg.MouseButton1Click:Connect(function()
+        if isOn then
+            if onDisable then safeCall(onDisable) end
+        else
+            if onEnable then safeCall(onEnable) end
+        end
+        isOn = not isOn
+        updateState()
+    end)
+
+    updateState()
+    return row
+end
+
+-- Sekme Geçişi
+local function selectTab(index)
+    currentTab = index
+    for i, t in ipairs(tabs) do
+        if i == index then
+            t.button.TextColor3 = C.accent
+            t.indicator.BackgroundTransparency = 0
+        else
+            t.button.TextColor3 = C.text3
+            t.indicator.BackgroundTransparency = 1
+        end
+    end
+
+    for _, child in pairs(content:GetChildren()) do
+        if child:IsA("Frame") then child:Destroy() end
+    end
+
+    local tabName = tabNames[index]
+    if tabName == "Genel" then
+        createToggleRow("Fly (Uçma)", false, Fly_Enable, Fly_Disable, function() return Fly_Enabled end)
+        createToggleRow("Noclip", false, Noclip_Enable, Noclip_Disable, function() return Noclip_Enabled end)
+        createToggleRow("Sınırsız Enerji", false, InfiniteStamina_Enable, InfiniteStamina_Disable, function() return isInfiniteStaminaEnabled end)
+
+    elseif tabName == "Görünüm" then
+        createToggleRow("FullBright", false, FullBright_Enable, FullBright_Disable, function() return FullBright_Enabled end)
+        createToggleRow("FOV Değiştir", false, FOV_Enable, FOV_Disable, function() return Fov_Enabled end)
+        createToggleRow("ESP (Oyuncu)", false, ESP_Enable, ESP_Disable, function() return espEnabled end)
+        createToggleRow("Safe ESP", false, SafeESP_Enable, SafeESP_Disable, function() return BredMakurz_Enabled end)
+        createToggleRow("Görünmezlik", false, Invis_Enable, Invis_Disable, function() return Shadow_Active end)
+
+    elseif tabName == "Savaş" then
+        createToggleRow("Melee Aura", false, MeleeAura_Enable, MeleeAura_Disable, function() return MeleeAura_Enabled end)
+        createToggleRow("Aimbot", false, Aimbot_Enable, Aimbot_Disable, function() return AimBotSettings.Enabled end)
+        createToggleRow("No Recoil", false, NoRecoil_Enable, NoRecoil_Disable, function() return NoRecoil_Enabled end)
+        createToggleRow("Ragebot", false, Ragebot_Enable, Ragebot_Disable, function() return Ragebot_Enabled end)
+
+    elseif tabName == "Farming" then
+        createToggleRow("Autofarm", false, Autofarm_Enable, Autofarm_Disable, function() return autofarmEnabled end)
+        createToggleRow("Auto Pickup Money", false, AutoPickupMoney_Enable, AutoPickupMoney_Disable, function() return AutoPickupMoney_Enabled end)
+        createToggleRow("No Fail Lockpick", false, NoFailLockpick_Enable, NoFailLockpick_Disable, function() return NoFailLockpick_Enabled end)
+        createToggleRow("Kapı Aç", false, OpenNearbyDoors_Enable, OpenNearbyDoors_Disable, function() return OpenNearbyDoors_Enabled end)
+        createToggleRow("Kapı Kilit Aç", false, UnlockNearbyDoors_Enable, UnlockNearbyDoors_Disable, function() return UnlockNearbyDoors_Enabled end)
+
+    elseif tabName == "Sistem" then
+        createToggleRow("Staff Detector", false, AdminCheck_Enable, AdminCheck_Disable, function() return AdminCheck_Enabled end)
+    end
+
+    content.CanvasPosition = Vector2.new(0, 0)
+    contentList:GetPropertyChangedSignal("AbsoluteContentSize"):Fire()
+end
+
+for i, t in ipairs(tabs) do
+    t.button.MouseButton1Click:Connect(function()
+        selectTab(i)
+    end)
+end
+
+selectTab(1)
+
+-- Footer
+local footer = Instance.new("Frame")
+footer.Name = "Footer"
+footer.Position = UDim2.new(0, 0, 1, -42)
+footer.Size = UDim2.new(1, 0, 0, 42)
+footer.BackgroundColor3 = C.panel
+footer.BorderSizePixel = 0
+footer.Parent = panel
+Instance.new("UICorner", footer).CornerRadius = UDim.new(0, 10)
+
+-- Avatar (Kullanıcının kafası)
+local avatar = Instance.new("ImageLabel")
+avatar.Position = UDim2.new(0, 12, 0.5, -13)
+avatar.Size = UDim2.new(0, 26, 0, 26)
+avatar.BackgroundColor3 = C.accent
+avatar.BackgroundTransparency = 1
+avatar.BorderSizePixel = 0
+avatar.Parent = footer
+Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
+
+safeCall(function()
+    local thumbType = Enum.ThumbnailType.HeadShot
+    local thumbSize = Enum.ThumbnailSize.Size420x420
+    local success, result = safeCall(function()
+        return Players:GetUserThumbnailAsync(LocalPlayer.UserId, thumbType, thumbSize)
+    end)
+    if success and result and #result > 0 then
+        avatar.Image = result
+    end
+end)
+
+local footerLabel = Instance.new("TextLabel")
+footerLabel.BackgroundTransparency = 1
+footerLabel.Position = UDim2.new(0, 48, 0, 0)
+footerLabel.Size = UDim2.new(1, -60, 1, 0)
+footerLabel.Font = Enum.Font.Gotham
+footerLabel.Text = LocalPlayer.Name
+footerLabel.TextColor3 = C.text2
+footerLabel.TextSize = 12
+footerLabel.TextXAlignment = Enum.TextXAlignment.Left
+footerLabel.Parent = footer
+
+-- Sürükleme
+local dragging, dragInput, dragStart, startPos
+local wasDragged = false
+
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        wasDragged = false
+        dragStart = input.Position
+        startPos = panel.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        if delta.Magnitude > 3 then wasDragged = true end
+        panel.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- Minimize
+local isMinimized = false
+local fullSize = UDim2.new(0, 480, 0, 380)
+local minimizedSize = UDim2.new(0, 90, 0, 90)
+
+local function minimizePanel()
+    isMinimized = true
+    body.Visible = false
+    footer.Visible = false
+    minimizeButton.Visible = false
+    closeButton.Visible = false
+    titleLabel.Text = "SANTES\nHUB"
+    titleLabel.TextSize = 13
+    titleLabel.TextWrapped = true
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Center
+    titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
+    titleLabel.Size = UDim2.new(1, 0, 1, 0)
+    titleBar.Size = UDim2.new(1, 0, 1, 0)
+    TweenService:Create(panel, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {Size = minimizedSize}):Play()
+end
+
+local function restorePanel()
+    isMinimized = false
+    TweenService:Create(panel, TweenInfo.new(0.18, Enum.EasingStyle.Quad), {Size = fullSize}):Play()
+    task.wait(0.18)
+    titleBar.Size = UDim2.new(1, 0, 0, 34)
+    titleLabel.Text = "SANTES HUB"
+    titleLabel.TextSize = 15
+    titleLabel.TextWrapped = false
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+    titleLabel.Position = UDim2.new(0, 14, 0, 0)
+    titleLabel.Size = UDim2.new(1, -80, 1, 0)
+    body.Visible = true
+    footer.Visible = true
+    minimizeButton.Visible = true
+    closeButton.Visible = true
+end
+
+minimizeButton.MouseButton1Click:Connect(function()
+    minimizePanel()
+end)
+
+titleBar.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and isMinimized and not wasDragged then
+        restorePanel()
+    end
+    wasDragged = false
+end)
+
+-- Right Shift ile aç/kapa
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.RightShift then
+        if isMinimized then restorePanel()
+        else minimizePanel() end
+    end
+end)
+
+print("╔═══════════════════════════════════════╗")
+print("║     SANTES HUB v3.2 YÜKLENDİ!       ║")
+print("║                                     ║")
+print("║  ➤ Right Shift ile Menüyü Aç/Kapat  ║")
+print("║  ➤ ESC ile Menüyü Kapat            ║")
+print("║                                     ║")
+print("║  ⚠ SADECE EĞİTİM AMAÇLIDIR! ⚠     ║")
+print("╚═══════════════════════════════════════╝")
