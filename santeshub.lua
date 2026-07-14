@@ -1,13 +1,19 @@
 --[[
-    SANTES HUB v3.2 - Premium Edition
+    SANTES HUB v3.2 - Delta Executor Uyumlu
     Geliştirici: Roblox Lua Uzmanı
-    Versiyon: 3.2.8
-    Tarih: 2026
-    
-    SADECE GUI - Loader YOK
+    Versiyon: 3.2.9
 ]]
 
--- ==================== SERVİSLER ====================
+-- ==================== ANTI-IDLE & SERVİSLER ====================
+local VirtualUser = game:GetService('VirtualUser')
+
+if game:GetService('Players').LocalPlayer then
+    game:GetService('Players').LocalPlayer.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -16,7 +22,6 @@ local Workspace = game:GetService("Workspace")
 local Lighting = game:GetService("Lighting")
 local CoreGui = game:GetService("CoreGui")
 local StarterGui = game:GetService("StarterGui")
-local VirtualUser = game:GetService("VirtualUser")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
@@ -82,14 +87,6 @@ local function getHumanoidRootPart()
     return char and char:FindFirstChild("HumanoidRootPart")
 end
 
--- ==================== ANTI-IDLE ====================
-safeCall(function()
-    LocalPlayer.Idled:Connect(function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end)
-end)
-
 -- ==================== TÜM MODÜLLER ====================
 
 --======================= FLY =========================--
@@ -134,48 +131,27 @@ end
 --======================= NOCLIP =========================--
 local Noclip_Enabled = false
 local Noclip_Connection = nil
-local originalCollisions = {}
 
 function Noclip_Enable()
     if Noclip_Enabled then return end
     Noclip_Enabled = true
-    local char = getCharacter()
-    if char then
-        for _, part in pairs(char:GetDescendants()) do
-            if part:IsA("BasePart") and part.CanCollide then
-                originalCollisions[part] = true
-                part.CanCollide = false
-            end
-        end
-    end
-    if not Noclip_Connection then
-        Noclip_Connection = RunService.RenderStepped:Connect(function()
-            if not Noclip_Enabled then return end
-            local char = getCharacter()
-            if char then
-                for _, part in pairs(char:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = false
-                    end
+    Noclip_Connection = RunService.RenderStepped:Connect(function()
+        if not Noclip_Enabled then return end
+        local char = getCharacter()
+        if char then
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
                 end
             end
-        end)
-    end
+        end
+    end)
 end
 
 function Noclip_Disable()
     if not Noclip_Enabled then return end
     Noclip_Enabled = false
     if Noclip_Connection then Noclip_Connection:Disconnect(); Noclip_Connection = nil end
-    local char = getCharacter()
-    if char then
-        for _, part in pairs(char:GetDescendants()) do
-            if part:IsA("BasePart") and originalCollisions[part] then
-                part.CanCollide = true
-            end
-        end
-    end
-    originalCollisions = {}
 end
 
 function Noclip_Toggle()
@@ -930,25 +906,6 @@ local NoRecoil_Enabled = false
 
 function NoRecoil_Enable()
     NoRecoil_Enabled = true
-    safeCall(function()
-        for _, v in pairs(getgc(true)) do
-            if type(v) == 'table' then
-                if rawget(v, 'Recoil') ~= nil then
-                    v.Recoil = 0
-                    v.Spread = 0
-                    v.CameraRecoilingEnabled = false
-                end
-                if rawget(v, 'AngleX_Min') ~= nil then
-                    v.AngleX_Min = 0
-                    v.AngleX_Max = 0
-                    v.AngleY_Min = 0
-                    v.AngleY_Max = 0
-                    v.AngleZ_Min = 0
-                    v.AngleZ_Max = 0
-                end
-            end
-        end
-    end)
 end
 
 function NoRecoil_Disable()
@@ -1454,7 +1411,7 @@ footer.BorderSizePixel = 0
 footer.Parent = panel
 Instance.new("UICorner", footer).CornerRadius = UDim.new(0, 10)
 
--- Avatar (Kullanıcının kafası)
+-- Avatar
 local avatar = Instance.new("ImageLabel")
 avatar.Position = UDim2.new(0, 12, 0.5, -13)
 avatar.Size = UDim2.new(0, 26, 0, 26)
@@ -1553,8 +1510,7 @@ local function restorePanel()
     titleLabel.Position = UDim2.new(0, 14, 0, 0)
     titleLabel.Size = UDim2.new(1, -80, 1, 0)
     body.Visible = true
-    footer.Visible = true
-    minimizeButton.Visible = true
+    footer.Visible = true    minimizeButton.Visible = true
     closeButton.Visible = true
 end
 
