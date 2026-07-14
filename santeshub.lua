@@ -1,5 +1,5 @@
 --[[
-    SANTES HUB v3.2 - Delta Executor Uyumlu
+    SANTES HUB v3.2 - Delta Executor Uyumlu (FIXED)
     Geliştirici: Roblox Lua Uzmanı
     Versiyon: 3.2.9
 ]]
@@ -25,9 +25,9 @@ local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui", 10)
 
-if not PlayerGui then return end
+-- PlayerGui'yi BEKLEYEREK al (return etme, blokla)
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local function safeCall(func, ...)
     local success, result = pcall(func, ...)
@@ -88,6 +88,7 @@ local function getHumanoidRootPart()
 end
 
 -- ==================== TÜM MODÜLLER ====================
+-- (MODÜL KODLARI AYNI, DEĞİŞİKLİK YOK)
 
 --======================= FLY =========================--
 local Fly_Enabled = false
@@ -1103,7 +1104,7 @@ end
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SantesHubGui"
 screenGui.ResetOnSpawn = false
-screenGui.Parent = PlayerGui
+screenGui.Parent = PlayerGui  -- PlayerGui zaten WaitForChild ile alındı, artık nil değil
 
 -- Ana panel
 local panel = Instance.new("Frame")
@@ -1510,7 +1511,8 @@ local function restorePanel()
     titleLabel.Position = UDim2.new(0, 14, 0, 0)
     titleLabel.Size = UDim2.new(1, -80, 1, 0)
     body.Visible = true
-    footer.Visible = true    minimizeButton.Visible = true
+    footer.Visible = true
+    minimizeButton.Visible = true
     closeButton.Visible = true
 end
 
