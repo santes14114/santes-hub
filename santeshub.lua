@@ -1,7 +1,8 @@
 --[[
-    SANTES HUB v3.2 - Delta Executor Uyumlu (FIXED)
+    SANTES HUB v3.2 - Delta Executor Uyumlu (FINAL FIX)
     Geliştirici: Roblox Lua Uzmanı
     Versiyon: 3.2.9
+    Not: GUI yüklenmezse Delta yerine Solara/Fluxus dene.
 ]]
 
 -- ==================== ANTI-IDLE & SERVİSLER ====================
@@ -25,9 +26,7 @@ local StarterGui = game:GetService("StarterGui")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
-
--- PlayerGui'yi BEKLEYEREK al (return etme, blokla)
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui") -- EQR Hub'daki gibi bekler
 
 local function safeCall(func, ...)
     local success, result = pcall(func, ...)
@@ -88,7 +87,10 @@ local function getHumanoidRootPart()
 end
 
 -- ==================== TÜM MODÜLLER ====================
--- (MODÜL KODLARI AYNI, DEĞİŞİKLİK YOK)
+-- (Fly, Noclip, FullBright, FOV, NoFailLockpick, SafeESP,
+--  Open/Unlock Doors, AutoPickupMoney, MeleeAura, Aimbot,
+--  InfiniteStamina, Invisibility, NoRecoil, StaffDetector,
+--  Ragebot, Autofarm, ESP)
 
 --======================= FLY =========================--
 local Fly_Enabled = false
@@ -1402,7 +1404,7 @@ end
 
 selectTab(1)
 
--- ==================== FOOTER (DÜZELTİLMİŞ) ====================
+-- Footer
 local footer = Instance.new("Frame")
 footer.Name = "Footer"
 footer.Position = UDim2.new(0, 0, 1, -42)
@@ -1412,54 +1414,39 @@ footer.BorderSizePixel = 0
 footer.Parent = panel
 Instance.new("UICorner", footer).CornerRadius = UDim.new(0, 10)
 
--- Avatar (Roblox profil resmi)
+-- Avatar
 local avatar = Instance.new("ImageLabel")
-avatar.Name = "Avatar"
-avatar.Size = UDim2.new(0, 26, 0, 26)
 avatar.Position = UDim2.new(0, 12, 0.5, -13)
-avatar.BackgroundColor3 = C.card
+avatar.Size = UDim2.new(0, 26, 0, 26)
+avatar.BackgroundColor3 = C.accent
+avatar.BackgroundTransparency = 1
 avatar.BorderSizePixel = 0
 avatar.Parent = footer
 Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
 
--- Avatarı yükle
 safeCall(function()
-    local userId = LocalPlayer.UserId
     local thumbType = Enum.ThumbnailType.HeadShot
-    local thumbSize = Enum.ThumbnailSize.Size100x100
-    local success, result = pcall(function()
-        return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+    local thumbSize = Enum.ThumbnailSize.Size420x420
+    local success, result = safeCall(function()
+        return Players:GetUserThumbnailAsync(LocalPlayer.UserId, thumbType, thumbSize)
     end)
-    if success and result then
+    if success and result and #result > 0 then
         avatar.Image = result
     end
 end)
 
--- Display Adı (üst satır)
-local displayNameLabel = Instance.new("TextLabel")
-displayNameLabel.BackgroundTransparency = 1
-displayNameLabel.Position = UDim2.new(0, 48, 0, 2)
-displayNameLabel.Size = UDim2.new(1, -60, 0.5, 0)
-displayNameLabel.Font = Enum.Font.GothamBold
-displayNameLabel.Text = LocalPlayer.DisplayName
-displayNameLabel.TextColor3 = C.text2
-displayNameLabel.TextSize = 13
-displayNameLabel.TextXAlignment = Enum.TextXAlignment.Left
-displayNameLabel.Parent = footer
+local footerLabel = Instance.new("TextLabel")
+footerLabel.BackgroundTransparency = 1
+footerLabel.Position = UDim2.new(0, 48, 0, 0)
+footerLabel.Size = UDim2.new(1, -60, 1, 0)
+footerLabel.Font = Enum.Font.Gotham
+footerLabel.Text = LocalPlayer.Name
+footerLabel.TextColor3 = C.text2
+footerLabel.TextSize = 12
+footerLabel.TextXAlignment = Enum.TextXAlignment.Left
+footerLabel.Parent = footer
 
--- Kullanıcı Adı (alt satır)
-local usernameLabel = Instance.new("TextLabel")
-usernameLabel.BackgroundTransparency = 1
-usernameLabel.Position = UDim2.new(0, 48, 0, 20)
-usernameLabel.Size = UDim2.new(1, -60, 0.5, 0)
-usernameLabel.Font = Enum.Font.Gotham
-usernameLabel.Text = "@" .. LocalPlayer.Name
-usernameLabel.TextColor3 = C.text3
-usernameLabel.TextSize = 10
-usernameLabel.TextXAlignment = Enum.TextXAlignment.Left
-usernameLabel.Parent = footer
-
--- ==================== SÜRÜKLEME VE MİNİMİZE ====================
+-- Sürükleme
 local dragging, dragInput, dragStart, startPos
 local wasDragged = false
 
